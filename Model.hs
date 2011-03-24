@@ -39,6 +39,7 @@ Favouring
 instance FromJSON User where
   parseJSON (Object v) = User <$> v .:  "screen_name" <*> v .: "id"
                               <*> v .:? "profile_image_url"
+                     <|> (parseJSON =<< v .: "user")
   parseJSON _          = mzero
 
 instance FromJSON Tweet where

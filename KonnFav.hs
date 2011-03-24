@@ -22,7 +22,8 @@ import qualified Settings
 import System.Directory
 import qualified Data.ByteString.Lazy as L
 import Database.Persist.GenericSql
-import Settings (hamletFile, cassiusFile, juliusFile, widgetFile)
+import Settings ( hamletFile, cassiusFile, juliusFile, widgetFile
+                , consumerKey, consumerSecret)
 import Model
 import Data.Maybe (isJust)
 import Control.Monad (join, unless)
@@ -137,6 +138,7 @@ instance YesodAuth KonnFav where
 
     getAuthId creds = runDB $ do
         x <- getBy $ UserScreenName $ credsIdent creds
+        liftIO $ print (credsExtra creds)
         case x of
             Just (uid, _) -> return $ Just uid
             Nothing -> do
@@ -150,9 +152,3 @@ instance YesodAuth KonnFav where
     readAuthId _ = readIntegral
 
     authPlugins = [ authTwitter consumerKey consumerSecret ]
-
-consumerKey :: String
-consumerKey = "Dummy Key"
-
-consumerSecret :: String
-consumerSecret = "Dummy Secret"

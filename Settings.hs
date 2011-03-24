@@ -17,6 +17,8 @@ module Settings
     , approot
     , staticroot
     , staticdir
+    , consumerKey
+    , consumerSecret
     ) where
 
 import qualified Text.Hamlet as H
@@ -144,3 +146,12 @@ withConnectionPool = withSqlitePool connStr connectionCount
 
 runConnectionPool :: MonadPeelIO m => SqlPersist m a -> ConnectionPool -> m a
 runConnectionPool = runSqlPool
+
+consumerKey :: String
+consumerKey = "Insert Here"
+
+consumerSecret :: String
+consumerSecret =  "Insert Here"
+
+
+
