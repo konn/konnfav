@@ -16,13 +16,14 @@ import Data.Maybe
 -- inclined, or create a single monolithic file.
 getFavedR :: String -> Handler RepHtml
 getFavedR scrName = do
-    (user, tweets) <- runDB $ do
+    (user, tws) <- runDB $ do
       (_, user) <- getBy404 (UserScreenName scrName)
-      tws <- selectList [TweetUserEq scrName] [] 0 0
+      tws <- selectList [TweetUserEq scrName] [TweetCreatedAtDesc] 0 0
       tweets <- forM tws $ \(tid, tw) -> do
           favs <- selectList [FavouringTweetEq (tweetStatusId tw)] [] 0 0
           (,) tw <$> forM favs (\(_, fav) -> snd <$> getBy404 (UserIdentifier $ favouringFrom fav))
-      return (user, tweets)  
+      return (user, filter (not . null . snd) tweets)
+    let tweets =  tws
     defaultLayout $ do
         h2id <- lift newIdent
         setTitle "konnfav homepage"

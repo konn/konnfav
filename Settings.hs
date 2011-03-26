@@ -17,8 +17,7 @@ module Settings
     , approot
     , staticroot
     , staticdir
-    , consumerKey
-    , consumerSecret
+    , module TwitterSettings
     ) where
 
 import qualified Text.Hamlet as H
@@ -29,6 +28,7 @@ import Database.Persist.Sqlite
 import Yesod (MonadPeelIO, addWidget, addCassius, addJulius)
 import Data.Monoid (mempty)
 import System.Directory (doesFileExist)
+import TwitterSettings
 
 -- | The base URL for your application. This will usually be different for
 -- development and production. Yesod automatically constructs URLs for you,
@@ -146,12 +146,3 @@ withConnectionPool = withSqlitePool connStr connectionCount
 
 runConnectionPool :: MonadPeelIO m => SqlPersist m a -> ConnectionPool -> m a
 runConnectionPool = runSqlPool
-
-consumerKey :: String
-consumerKey = "Insert Here"
-
-consumerSecret :: String
-consumerSecret =  "Insert Here"
-
-
-
