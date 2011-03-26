@@ -10,3 +10,6 @@ $nothing
         You are not logged in. #
         <a href=@{AuthR LoginR}>Login now
         .
+<h2> Rescent faved tweets
+<div id="faved_tweets">
+
