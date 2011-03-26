@@ -12,6 +12,7 @@ import Data.Aeson
 import Control.Applicative
 import Control.Monad
 import System.Locale
+import Data.Maybe
 
 -- You can define all of your database entities here. You can find more
 -- information on persistent and how to declare entities at:
@@ -20,6 +21,21 @@ share2 mkPersist (mkMigrate "migrateAll") [persist|
 User
     screenName String Eq
     userId Word64 Eq
+    protected Bool Eq
+    description String default=''
+    favouritesCount Int
+    followersCount Int
+    friendsCount Int
+    geoEnabled Bool
+    lang String default='en'
+    listedCount Int
+    location String Maybe
+    name String Maybe
+    statusesCount Int
+    timezone String Maybe
+    url String Maybe
+    utcOffset Int Maybe
+    verified Bool
     icon String Maybe
     UserScreenName screenName
     UserIdentifier userId
@@ -41,7 +57,23 @@ newtype TwitterTime = TwitterTime { fromTwitterTime :: UTCTime }
     deriving (Eq, Ord, Show, Read, PersistField)
 
 instance FromJSON User where
-  parseJSON (Object v) = User <$> v .:  "screen_name" <*> v .: "id"
+  parseJSON (Object v) = User <$> v .:  "screen_name"
+                              <*> v .: "id"
+                              <*> v .:  "protected"
+                              <*> (fromMaybe "" <$> v .:?  "description")
+                              <*> v .:  "favourites_count"
+                              <*> v .:  "followers_count"
+                              <*> v .:  "friends_count"
+                              <*> v .:  "geo_enabled"
+                              <*> v .:  "lang"
+                              <*> v .:  "listed_count"
+                              <*> v .:? "location"
+                              <*> v .:? "name"
+                              <*> v .:  "statuses_count"
+                              <*> v .:? "time_zone"
+                              <*> v .:? "url"
+                              <*> v .:? "utc_offset"
+                              <*> v .:  "verified"
                               <*> v .:? "profile_image_url"
                      <|> (parseJSON =<< v .: "user")
   parseJSON _          = mzero
@@ -79,6 +111,21 @@ instance ToJSON TwitterTime where
 instance ToJSON User where
   toJSON usr = object [ "screen_name" .= userScreenName usr
                       , "id" .= userUserId usr
+                      , "protected" .= userProtected usr
+                      , "description" .= userDescription usr
+                      , "favourites_count" .= userFavouritesCount usr
+                      , "followers_count" .= userFollowersCount usr
+                      , "friends_count" .= userFriendsCount usr
+                      , "geo_enabled" .= userGeoEnabled usr
+                      , "lang" .= userLang usr
+                      , "listed_count" .= userListedCount usr
+                      , "location" .= userLocation usr
+                      , "name" .= userName usr
+                      , "statuses_count" .= userStatusesCount usr
+                      , "time_zone" .= userTimezone usr
+                      , "url" .= userUrl usr
+                      , "utc_offset" .= userUtcOffset usr
+                      , "verified" .= userVerified usr
                       , "profile_image_url" .= userIcon usr
                       ]
 
