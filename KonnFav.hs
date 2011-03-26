@@ -32,6 +32,14 @@ import qualified Data.Text.Lazy
 import qualified Data.Text.Lazy.Encoding
 import Data.Maybe
 import Text.Jasmine (minifym)
+import Network.HTTP.Enumerator
+import Web.Authenticate.OAuth (signOAuth, Credential(..))
+import Data.Aeson
+import Data.Attoparsec.Lazy
+import Control.Applicative
+import TwitterSettings
+import Control.Arrow ((***))
+import Data.ByteString.UTF8 (fromString)
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -128,6 +136,13 @@ instance YesodPersist KonnFav where
     runDB db = liftIOHandler
              $ fmap connPool getYesod >>= Settings.runConnectionPool db
 
+fromJSON' :: FromJSON a => Value -> Maybe a
+fromJSON' = resultToMaybe . fromJSON
+
+resultToMaybe :: Data.Aeson.Result a -> Maybe a
+resultToMaybe (Success a) = Just a
+resultToMaybe _           = Nothing
+
 instance YesodAuth KonnFav where
     type AuthId KonnFav = UserId
 
@@ -138,15 +153,17 @@ instance YesodAuth KonnFav where
 
     getAuthId creds = runDB $ do
         x <- getBy $ UserScreenName $ credsIdent creds
-        liftIO $ print (credsExtra creds)
+        let twCredential = Credential . map (fromString *** fromString) $ credsExtra creds
         case x of
             Just (uid, _) -> return $ Just uid
             Nothing -> do
-                fmap Just $ insert $
-                  User { userScreenName = credsIdent creds
-                       , userUserId = maybe 0 read $ lookup "user_id" $ credsExtra creds
-                       , userIcon = Nothing
-                       }
+                musr <- liftIO $ do
+                  req <- parseUrl $ "http://api.twitter.com/1/users/show.json?screen_name=" ++ credsIdent creds
+                  src <- responseBody <$> (httpLbs =<< signOAuth twitter twCredential req)
+                  return $ fromJSON' =<< maybeResult (parse json src)
+                case musr of
+                  Nothing  -> return Nothing
+                  Just usr -> Just <$> insert usr
 
     showAuthId _ = showIntegral
     readAuthId _ = readIntegral
