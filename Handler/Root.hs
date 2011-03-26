@@ -17,7 +17,7 @@ getRootR = do
     tws <- runDB $ do
       dics <- selectList [] [TweetCreatedAtDesc] 0 0
       take 20 . filter (not . null . snd) <$> mapM (favWithUsers.snd) dics
-    mapM renderTweet tws
+    tweets <- mapM renderTweet tws
     defaultLayout $ do
         h2id <- lift newIdent
         setTitle "konnfav homepage"

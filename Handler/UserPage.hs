@@ -21,7 +21,7 @@ getFavedR scrName = do
       tws <- selectList [TweetUserEq scrName] [TweetCreatedAtDesc] 0 0
       tweets <- mapM (favWithUsers . snd) tws
       return (user, filter (not . null . snd) tweets)
-    mapM renderTweet tws
+    tweets <- mapM renderTweet tws
     defaultLayout $ do
         h2id <- lift newIdent
         setTitle "konnfav homepage"
@@ -30,6 +30,8 @@ getFavedR scrName = do
 getFavouringsR :: String -> Handler RepHtml
 getFavouringsR  scrName = do
     mu <- maybeAuth
+    
+    tweets <- mapM renderTweet []
     defaultLayout $ do
         h2id <- lift newIdent
         setTitle "konnfav homepage"

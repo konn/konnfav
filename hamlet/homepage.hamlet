@@ -12,4 +12,5 @@ $nothing
         .
 <h2> Rescent faved tweets
 <div id="faved_tweets">
-
+  $forall tw <- tweets
+    ^{tw}

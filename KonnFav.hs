@@ -172,11 +172,11 @@ instance YesodAuth KonnFav where
 
     authPlugins = [ authTwitter consumerKey consumerSecret ]
 
-renderTweet :: (Tweet, [User]) -> Handler RepHtml
+renderTweet :: (Tweet, [User]) -> Handler (Widget ())
 renderTweet tw = do
   muser <- runDB $ getBy (UserScreenName $ tweetUser $ fst tw)
   let user = maybe undefined snd muser
-  defaultLayout $ addWidget $(widgetFile "fav")
+  return $(widgetFile "fav")
 
 -- favWithUsers :: (PersistBackend m) => Tweet -> m (Tweet, [User])
 favWithUsers tw = do

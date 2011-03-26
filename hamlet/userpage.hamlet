@@ -1,4 +1,5 @@
 <h1>KonnFav
 <h2 ##{h2id}>Favourited of #{userScreenName user} 
 <div id="faved_tweets">
-
+  $forall tw <- tweets
+    ^{tw}
