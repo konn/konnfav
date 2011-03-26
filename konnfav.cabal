@@ -37,6 +37,10 @@ executable         konnfav-test
                  , hjsmin
                  , transformers
                  , warp
+                 , old-locale
+                 , aeson
+                 , time
+                 , authenticate
     ghc-options:   -Wall -threaded
 
 executable         konnfav-production
@@ -53,3 +57,8 @@ executable         konnfav-devel
         Buildable: False
     main-is:       devel-server.hs
     ghc-options:   -Wall -O2 -threaded
+
+executable Crawler
+  main-is: Crawler.hs
+  ghc-options: -Wall -O2 -threaded
+  build-depends: random, monad-peel, attoparsec, attoparsec-enumerator, http-enumerator, enumerator
