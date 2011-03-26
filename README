@@ -1,0 +1,17 @@
+Copyright (C) Hiromi ISHII 2011
+
+* USAGE
+Create the TwitterSettings.hs file containing following contents:
+> consumerKey :: String
+> consumerSecret :: String
+> tokenCredential :: Credential -- ^ Token Credential for Crawler
+> twitter :: OAuth
+
+Then you can compile!
+
+* About Crawler
+For now, the crawler supports only user streams.
+You can easily fix it to use sitestream or streaming api.
+
+enjoy!
+
