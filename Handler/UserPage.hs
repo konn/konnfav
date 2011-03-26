@@ -19,11 +19,9 @@ getFavedR scrName = do
     (user, tws) <- runDB $ do
       (_, user) <- getBy404 (UserScreenName scrName)
       tws <- selectList [TweetUserEq scrName] [TweetCreatedAtDesc] 0 0
-      tweets <- forM tws $ \(tid, tw) -> do
-          favs <- selectList [FavouringTweetEq (tweetStatusId tw)] [] 0 0
-          (,) tw <$> forM favs (\(_, fav) -> snd <$> getBy404 (UserIdentifier $ favouringFrom fav))
+      tweets <- mapM (favWithUsers . snd) tws
       return (user, filter (not . null . snd) tweets)
-    let tweets =  tws
+    mapM renderTweet tws
     defaultLayout $ do
         h2id <- lift newIdent
         setTitle "konnfav homepage"

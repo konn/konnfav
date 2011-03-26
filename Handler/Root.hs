@@ -2,6 +2,7 @@
 module Handler.Root where
 
 import KonnFav
+import Control.Applicative
 
 -- This is a handler function for the GET request method on the RootR
 -- resource pattern. All of your resource patterns are defined in
@@ -13,6 +14,10 @@ import KonnFav
 getRootR :: Handler RepHtml
 getRootR = do
     mu <- maybeAuth
+    tws <- runDB $ do
+      dics <- selectList [] [TweetCreatedAtDesc] 0 0
+      take 20 . filter (not . null . snd) <$> mapM (favWithUsers.snd) dics
+    mapM renderTweet tws
     defaultLayout $ do
         h2id <- lift newIdent
         setTitle "konnfav homepage"

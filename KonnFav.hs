@@ -12,6 +12,7 @@ module KonnFav
     , module Model
     , StaticRoute (..)
     , AuthRoute (..)
+    , renderTweet, favWithUsers
     ) where
 
 import Yesod
@@ -40,6 +41,7 @@ import Control.Applicative
 import TwitterSettings
 import Control.Arrow ((***))
 import Data.ByteString.UTF8 (fromString)
+import Control.Monad
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -169,3 +171,16 @@ instance YesodAuth KonnFav where
     readAuthId _ = readIntegral
 
     authPlugins = [ authTwitter consumerKey consumerSecret ]
+
+renderTweet :: (Tweet, [User]) -> Handler RepHtml
+renderTweet tw = do
+  muser <- runDB $ getBy (UserScreenName $ tweetUser $ fst tw)
+  let user = maybe undefined snd muser
+  defaultLayout $ addWidget $(widgetFile "fav")
+
+-- favWithUsers :: (PersistBackend m) => Tweet -> m (Tweet, [User])
+favWithUsers tw = do
+  favs <- selectList [FavouringTweetEq (tweetStatusId tw)] [] 0 0
+  favers <- forM favs $ \(_, fav) -> snd <$> getBy404 (UserIdentifier $ favouringFrom fav)
+  return (tw, filter (not . userProtected) favers)
+
