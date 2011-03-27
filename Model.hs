@@ -13,6 +13,7 @@ import Control.Applicative
 import Control.Monad
 import System.Locale
 import Data.Maybe
+import Control.Arrow (first)
 
 -- You can define all of your database entities here. You can find more
 -- information on persistent and how to declare entities at:
@@ -56,7 +57,13 @@ Favouring
 |]
 
 newtype TwitterTime = TwitterTime { fromTwitterTime :: UTCTime }
-    deriving (Eq, Ord, Show, Read, PersistField)
+    deriving (Eq, Ord, PersistField)
+
+instance Show TwitterTime where
+  show = formatTime defaultTimeLocale "%c" . fromTwitterTime
+
+instance Read TwitterTime where
+  readsPrec _ = Prelude.map (first TwitterTime) . readsTime defaultTimeLocale "%c"
 
 instance FromJSON User where
   parseJSON (Object v) = User <$> v .:  "screen_name"
