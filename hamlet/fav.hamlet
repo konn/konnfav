@@ -11,7 +11,7 @@
       $maybe repl <- (tweetInReplyToStatusId (fst tw))
         $maybe repU <- (tweetInReplyToUserId (fst tw))
           in reply to
-          <a href="http://twitter.com/#{show repU}/status/#{show repl}">#{show repU}
+          <a href=@{StatusR (fromIntegral repl)}>#{show repU}
           \ 
       <a href="http://twitter.com/#{userScreenName user}/status/#{show (tweetStatusId (fst tw))}">
         #{show (tweetCreatedAt (fst tw))}

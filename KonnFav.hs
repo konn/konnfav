@@ -42,6 +42,7 @@ import TwitterSettings
 import Control.Arrow ((***))
 import Data.ByteString.UTF8 (fromString)
 import Control.Monad
+import Data.Word
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -86,6 +87,7 @@ mkYesodData "KonnFav" [parseRoutes|
 /users/#String FavedR GET
 /users/#String/favs FavouringsR GET
 /search SearchR GET
+/status/#Integer StatusR GET
 
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
