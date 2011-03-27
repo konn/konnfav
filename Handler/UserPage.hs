@@ -6,6 +6,7 @@ import Control.Applicative
 import Data.Int
 import Control.Monad
 import Data.Maybe
+import Data.String
 
 -- This is a handler function for the GET request method on the RootR
 -- resource pattern. All of your resource patterns are defined in
@@ -24,7 +25,7 @@ getFavedR scrName = do
     tweets <- mapM renderTweet tws
     defaultLayout $ do
         h2id <- lift newIdent
-        setTitle "Rescently faved tweets of #{scrName}"
+        setTitle $ fromString $ "Rescently faved tweets of " ++ scrName
         addWidget $(widgetFile "userpage")
 
 getFavouringsR :: String -> Handler RepHtml
@@ -37,5 +38,5 @@ getFavouringsR  scrName = do
     tweets <- mapM renderTweet tws
     defaultLayout $ do
         h2id <- lift newIdent
-        setTitle "Favourites of #{scrName}"
+        setTitle $ fromString $ "Favourites of " ++ scrName
         addWidget $(widgetFile "userpage")
