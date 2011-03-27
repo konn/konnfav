@@ -5,3 +5,5 @@
 img.fav_face
   width: 24px
   height: 24px
+.tweet_body
+  margin-top: 2em
