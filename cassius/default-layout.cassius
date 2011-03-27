@@ -1,2 +1,5 @@
 body
     font-family: sans-serif
+p#auth
+  font-size: small
+  text-align: right
