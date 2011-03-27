@@ -11,7 +11,8 @@
         $maybe repU <- (tweetInReplyToUserId (fst tw))
           in reply to
           <a href="http://twitter.com/#{show repU}/status/#{show repl}">#{show repU}
-      #{show (tweetCreatedAt (fst tw))}
+      <a href="http://twitter.com/#{userScreenName user}/status/#{tweetStatusId (fst tw)}">
+        #{show (tweetCreatedAt (fst tw))}
   <div .favs_list>
     $forall u <- (snd tw)
       <a href=@{FavedR (userScreenName u)}>
