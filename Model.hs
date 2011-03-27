@@ -44,6 +44,8 @@ Tweet
     createdAt TwitterTime Lt Gt Ge Le Desc
     statusId Word64 Eq
     user String Eq
+    place String Maybe
+    source String default='Web'
     inReplyToStatusId Word64 Maybe
     inReplyToUserId   Word64 Maybe
     UniqueTweet statusId    
@@ -83,6 +85,7 @@ instance FromJSON Tweet where
   parseJSON (Object v) =
       Tweet <$> v .: "text" <*> v .: "created_at" <*> v .: "id"
             <*> (v .: "user" >>= (.: "screen_name"))
+            <*> v .:? "place" <*> v .: "source"
             <*> v .:? "in_reply_to_status_id" <*> v .:? "in_reply_to_user_id"
   parseJSON _          = mzero
 
@@ -135,6 +138,10 @@ instance ToJSON Tweet where
            , "created_at" .= tweetCreatedAt tw
            , "id" .= tweetStatusId tw
            , "user" .= object []
+           , "place" .= tweetPlace tw
+           , "source" .= tweetSource tw
+           , "in_reply_to_status_id" .= tweetInReplyToStatusId tw
+           , "in_reply_to_user_id" .= tweetInReplyToUserId tw
            ]
 
 
