@@ -1,5 +1,5 @@
-<h1>Hello
-<h2 ##{h2id}>You do not have Javascript enabled.
+<h1>KonnFav
+<h2>Welcome to KonnFav!
 $maybe u <- mu
     <p
         You are logged in as #{userScreenName $ snd u}. #
@@ -10,7 +10,7 @@ $nothing
         You are not logged in. #
         <a href=@{AuthR LoginR}>Login now
         .
-<h2> Rescent faved tweets
+<h2> Rescently faved public tweets
 <div id="faved_tweets">
   $forall tw <- tweets
     ^{tw}
