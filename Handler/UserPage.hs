@@ -25,7 +25,7 @@ getFavedR scrName = do
     tweets <- mapM renderTweet tws
     defaultLayout $ do
         h2id <- lift newIdent
-        setTitle $ fromString $ "Rescently faved tweets <b>of</b> @" ++ scrName
+        setTitle $ fromString $ "Rescently faved tweets of @" ++ scrName
         addWidget $(widgetFile "userpage")
 
 getFavouringsR :: String -> Handler RepHtml
