@@ -16,6 +16,7 @@ import Data.Maybe
 -- inclined, or create a single monolithic file.
 getFavedR :: String -> Handler RepHtml
 getFavedR scrName = do
+    mu <- maybeAuth
     (user, tws) <- runDB $ do
       (_, user) <- getBy404 (UserScreenName scrName)
       tws <- selectList [TweetUserEq scrName] [TweetCreatedAtDesc] 0 0
