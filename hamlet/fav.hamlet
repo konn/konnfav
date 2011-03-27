@@ -2,7 +2,7 @@
       <div .face>
         <a href=@{FavedR (userScreenName user)}>
           <img src=#{fromJust (userIcon user)}>
-      <div class="text">#{tweetText (fst tw)}
-      <div class="favs_list">
+      <div .text>#{tweetText (fst tw)}
+      <div .favs_list>
         $forall u <- (snd tw)
            <a href=@{FavedR (userScreenName u)}> <img src=#{fromJust (userIcon u)}>
