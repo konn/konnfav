@@ -1,16 +1,16 @@
 <h1>KonnFav
 <h2>Welcome to KonnFav!
 $maybe u <- mu
-    <p
+    <p #auth
         You are logged in as #{userScreenName $ snd u}. #
         <a href=@{AuthR LogoutR}>Logout
         .
 $nothing
-    <p
+    <p #auth
         You are not logged in. #
         <a href=@{AuthR LoginR}>Login now
         .
-<h2> Rescently faved public tweets
+<h3> Rescently faved public tweets
 <div id="faved_tweets">
   $forall tw <- tweets
     ^{tw}
