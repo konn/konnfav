@@ -1,0 +1,4 @@
+.tweet .face
+  floating: left;
+.teeet .text 
+  floating: right;
