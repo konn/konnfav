@@ -52,8 +52,6 @@ Tweet
 Favouring
     from Word64 Eq
     tweet Word64 Eq
-    FavouringTweet tweet
-    FavouringFrom  from
     UniqueFavouring from tweet
 |]
 
