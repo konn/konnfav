@@ -5,7 +5,8 @@
         <img src=#{fromJust (userIcon user)}>
     <div .text>#{tweetText (fst tw)}
     <div .tweet_info
-      #{fromMaybe (userScreenName user) (userName user)} 
+      <a href=@{SearchR (userScreenName user)}>
+        #{fromMaybe (userScreenName user) (userName user)} 
       $maybe repl <- (tweetInReplyToStatusId (fst tw))
         $maybe repU <- (tweetInReplyToUserId (fst tw))
           in reply to
