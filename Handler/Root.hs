@@ -13,7 +13,6 @@ import Control.Applicative
 -- inclined, or create a single monolithic file.
 getRootR :: Handler RepHtml
 getRootR = do
-    mu <- maybeAuth
     tws <- runDB $ do
       dics <- selectList [] [TweetCreatedAtDesc] 0 0
       take 20 . filter (not . null . snd) <$> mapM (favWithUsers.snd) dics

@@ -98,6 +98,7 @@ instance Yesod KonnFav where
     approot _ = Settings.approot
 
     defaultLayout widget = do
+        mu <- maybeAuth
         mmsg <- getMessage
         pc <- widgetToPageContent $ do
             widget
