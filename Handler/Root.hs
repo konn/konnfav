@@ -21,3 +21,8 @@ getRootR = do
         h2id <- lift newIdent
         setTitle "konnfav homepage"
         addWidget $(widgetFile "homepage")
+
+getSearchR :: Handler ()
+getSearchR = do
+  scrName <- runFormGet' $ stringInput "screen_name"
+  redirect RedirectTemporary $ FavedR scrName

@@ -85,6 +85,7 @@ mkYesodData "KonnFav" [parseRoutes|
 
 /users/#String FavedR GET
 /users/#String/favs FavouringsR GET
+/search SearchR GET
 
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
@@ -185,3 +186,7 @@ favWithUsers tw = do
   favers <- forM favs $ \(_, fav) -> snd <$> getBy404 (UserIdentifier $ favouringFrom fav)
   return (tw, filter (not . userProtected) favers)
 
+getSearchR :: Handler ()
+getSearchR = do
+  scrName <- runFormGet' $ stringInput "screen_name"
+  redirect RedirectTemporary $ FavedR scrName

@@ -17,4 +17,7 @@
 	    .
       $maybe msg <- mmsg
           <div #message>#{msg}
+      <form method="get" action=@{SearchR}>
+        <input type="text" name="screen_name" id="screen_name">
+        <input type="submit" name="検索"
       ^{pageBody pc}
