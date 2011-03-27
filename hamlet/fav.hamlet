@@ -4,6 +4,13 @@
       <a href=@{FavedR (userScreenName user)}>
         <img src=#{fromJust (userIcon user)}>
     <div .text>#{tweetText (fst tw)}
+    <div .tweet_info
+      #{fromMaybe (userScreenName user) (userName user)} 
+      $maybe repl <- (tweetInReplyToStatusId (fst tw))
+        $maybe repU <- (tweetInReplyToUserId (fst tw))
+          in reply to
+          <a href="http://twitter.com/#{show repU}/status/#{show repl}">#{show repU}
+      #{show (tweetCreatedAt (fst tw))}
   <div .favs_list>
     $forall u <- (snd tw)
       <a href=@{FavedR (userScreenName u)}>
