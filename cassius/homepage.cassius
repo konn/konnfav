@@ -1,3 +1,6 @@
+p#auth
+  font-size: small
+  text-align: right
 h1
     text-align: center
 h2##{h2id}
