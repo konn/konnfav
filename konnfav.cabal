@@ -41,6 +41,7 @@ executable         konnfav-test
                  , aeson
                  , time
                  , authenticate
+                 , utf8-string
     ghc-options:   -Wall -threaded
 
 executable         konnfav-production
