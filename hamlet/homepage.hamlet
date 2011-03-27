@@ -1,5 +1,4 @@
 <h1>KonnFav
-<h2>Welcome to KonnFav!
 $maybe u <- mu
     <p #auth
         You are logged in as #{userScreenName $ snd u}. #
@@ -9,7 +8,9 @@ $nothing
     <p #auth
         You are not logged in. #
         <a href=@{AuthR LoginR}>Login now
-        .
+	.
+<h2>Welcome to KonnFav!
+<p> This site is experimental. For now, it's \@mr_konn only
 <h3> Rescently faved public tweets
 <div id="faved_tweets">
   $forall tw <- tweets

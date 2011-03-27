@@ -5,3 +5,7 @@ h1
     text-align: center
 h2##{h2id}
     color: #990
+.tweet .face
+  floating: left;
+.teeet .text 
+  floating: right;
