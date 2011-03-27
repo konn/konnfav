@@ -12,7 +12,7 @@ module KonnFav
     , module Model
     , StaticRoute (..)
     , AuthRoute (..)
-    , renderTweet, favWithUsers
+    , renderTweet, favWithUsers, getSearchR
     ) where
 
 import Yesod
