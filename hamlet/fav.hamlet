@@ -6,7 +6,8 @@
     <div .text>#{tweetText (fst tw)}
     <div .tweet_info
       <a href=@{FavedR (userScreenName user)}>
-        #{fromMaybe (userScreenName user) (userName user)} 
+        #{fromMaybe (userScreenName user) (userName user)}
+      \ 
       $maybe repl <- (tweetInReplyToStatusId (fst tw))
         $maybe repU <- (tweetInReplyToUserId (fst tw))
           in reply to
