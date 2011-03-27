@@ -1,5 +1,7 @@
-    <div class="tweet" ##{(++) "tweet_" (show (tweetStatusId (fst tw)))}>
-      <div class="face"><img src=#{fromJust (userIcon user)}>
+    <div .tweet ##{(++) "tweet_" (show (tweetStatusId (fst tw)))}>
+      <div .face>
+        <a href=@{FavedR (userScreenName user)}>
+	  <img src=#{fromJust (userIcon user)}>
       <div class="text">#{tweetText (fst tw)}
       <div class="favs_list">
         $forall u <- (snd tw)

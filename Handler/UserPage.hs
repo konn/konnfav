@@ -24,15 +24,19 @@ getFavedR scrName = do
     tweets <- mapM renderTweet tws
     defaultLayout $ do
         h2id <- lift newIdent
-        setTitle "konnfav homepage"
+        setTitle "Rescently faved tweets of #{scrName}"
         addWidget $(widgetFile "userpage")
 
 getFavouringsR :: String -> Handler RepHtml
 getFavouringsR  scrName = do
     mu <- maybeAuth
-    
-    tweets <- mapM renderTweet []
+    (user, tws) <- runDB $ do
+      (_, user) <- getBy404 (UserScreenName scrName)
+      favs <- map snd <$> selectList [FavouringFromEq (userUserId user)] [] 0 0
+      tws <- mapM (favWithUsers.snd) =<< mapM (getBy404 . UniqueTweet .favouringTweet) favs
+      return (user, tws)
+    tweets <- mapM renderTweet tws
     defaultLayout $ do
         h2id <- lift newIdent
-        setTitle "konnfav homepage"
-        addWidget $(widgetFile "homepage")
+        setTitle "Favourites of #{scrName}"
+        addWidget $(widgetFile "userpage")
