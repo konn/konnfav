@@ -90,7 +90,7 @@ handleBusy act = void act `catch` handler
   where
     handler (e::SomeException) =
       case Prelude.take 1 $ Prelude.drop 4 $ Prelude.words $ show e of
-        ["ErrorBusy"] -> liftIO (Prelude.putStrLn "Busy. retry...") >> handleBusy act
+        ["ErrorBusy"] -> liftIO (Prelude.putStrLn "Busy. retry..." >> randomRIO (1,1000) >>= threadDelay) >> handleBusy act
         _             -> liftIO (print e)
 
 data Event = Event { event  :: String
