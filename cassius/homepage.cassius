@@ -7,5 +7,5 @@ h2##{h2id}
     color: #990
 .tweet .face
   floating: left;
-.teeet .text 
+.tweet .text 
   floating: right;
