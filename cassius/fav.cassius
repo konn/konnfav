@@ -1,4 +1,7 @@
-.tweet .face
-  floating: left;
-.teeet .text 
-  floating: right;
+.tweet_body .face
+  floating: left
+.teeet_body .text 
+  floating: right
+img.fav_face
+  width: 24px
+  height: 24px
