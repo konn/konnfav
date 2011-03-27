@@ -54,7 +54,10 @@ registerIter = do
         maybe (return ()) procEvent ev
       registerIter
 
-procEvent ev =
+procEvent ev = do
+  either (const $ return ()) (void.insertBy) (_source ev)
+  either (const $ return ()) (void.insertBy) (_target ev)
+  either (const $ return ()) (void.insertBy) (_targetObject ev)
   case event ev of
     "unfavorite" -> do
       liftIO $ print ev
