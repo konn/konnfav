@@ -4,6 +4,17 @@
         <title>#{pageTitle pc}
         ^{pageHead pc}
     <body
-        $maybe msg <- mmsg
-            <div #message>#{msg}
-        ^{pageBody pc}
+      <h1>KonnFav
+      $maybe u <- mu
+          <p #auth
+            You are logged in as #{userScreenName $ snd u}. #
+            <a href=@{AuthR LogoutR}>Logout
+            .
+      $nothing 
+          <p #auth
+            You are not logged in. #
+            <a href=@{AuthR LoginR}>Login now
+	    .
+      $maybe msg <- mmsg
+          <div #message>#{msg}
+      ^{pageBody pc}

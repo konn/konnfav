@@ -1,14 +1,3 @@
-<h1>KonnFav
-$maybe u <- mu
-    <p #auth
-        You are logged in as #{userScreenName $ snd u}. #
-        <a href=@{AuthR LogoutR}>Logout
-        .
-$nothing
-    <p #auth
-        You are not logged in. #
-        <a href=@{AuthR LoginR}>Login now
-	.
 <h2>Welcome to KonnFav!
 <p> This site is experimental. For now, it's @mr_konn only.
 <h3> Rescently faved public tweets
