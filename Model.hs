@@ -53,6 +53,7 @@ Tweet
 Favouring
     from Word64 Eq
     tweet Word64 Eq
+    createdAt TwitterTime Lt Gt Ge Le Desc default=CURRENT_TIME
     UniqueFavouring from tweet
 |]
 
@@ -103,6 +104,7 @@ instance FromJSON Favouring where
     if (ev == ("favorite" :: Text)) 
       then Favouring <$> (userUserId <$> v .: "source")
                      <*> (tweetStatusId <$> v .: "target_object")
+                     <*> v .: "created_at"
       else mzero
   parseJSON _          = mzero
 

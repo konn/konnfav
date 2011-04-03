@@ -10,7 +10,8 @@ import System.Locale
 import qualified Data.Enumerator as E
 import qualified Data.Enumerator.List as EL
 import qualified Data.Enumerator.Binary as BE
-import Data.Enumerator hiding (map, mapM)
+import Data.Enumerator (Enumeratee(..), Iteratee(..), joinI, ($$), Step(..), Stream(..)
+                       , returnI, (>>==), run_)
 import Network.HTTP.Enumerator
 import Data.Attoparsec.Enumerator
 import Data.Attoparsec.Lazy
@@ -83,7 +84,7 @@ infixr 0 =$
 main :: IO ()
 main = do
   req <- signOAuth twitter tokenCredential =<< parseUrl "https://userstream.twitter.com/2/user.json"
-  run_ (http req $ \_ _ -> E.sequence (enumLine =$ E.map (concat . L8.toChunks) =$ iterParser json) =$ registerIter)
+  run_ (http req $ \_ _ -> E.sequence (enumLine =$ EL.map (concat . L8.toChunks) =$ iterParser json) =$ registerIter)
 
 handleBusy :: (Functor m, MonadPeelIO m) => m a -> m ()
 handleBusy act = void act `catch` handler
@@ -93,7 +94,8 @@ handleBusy act = void act `catch` handler
         ["ErrorBusy"] -> liftIO (Prelude.putStrLn "Busy. retry..." >> randomRIO (1,1000) >>= threadDelay) >> handleBusy act
         _             -> liftIO (print e)
 
-data Event = Event { event  :: String
+data Event = Event { event     :: String
+                   , createdAt :: Maybe TwitterTime
                    , _source :: Either Word64 User
                    , _target :: Either Word64 User
                    , _targetObject :: Either Word64 Tweet
@@ -105,9 +107,11 @@ eventTarget = either id userUserId . _target
 eventTargetObject = either id tweetStatusId . _targetObject
 
 instance FromJSON Event where
-  parseJSON (Object v) = Event <$> v .: "event"  <*> v .: "source"
+  parseJSON (Object v) = Event <$> v .: "event"  <*> v .: "created_at"
+                               <*> v .: "source"
                                <*> v .: "target" <*> v .: "target_object"
-                      <|> (v .: "delete" >>= (.: "status") >>= \d -> (Event "delete" <$> d .: "user_id"
+                      <|> (v .: "delete" >>= (.: "status") >>= \d -> (Event "delete" Nothing
+                                                                      <$> d .: "user_id"
                                                                       <*> d .: "user_id" <*> d .: "id"))
   parseJSON _          = mzero
 
