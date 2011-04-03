@@ -2,7 +2,11 @@
 module Handler.Root where
 
 import KonnFav
+import Utils
 import Control.Applicative
+import Data.Enumerator hiding (mapM, consume)
+import qualified Data.Enumerator as E
+import Data.Enumerator.List
 
 -- This is a handler function for the GET request method on the RootR
 -- resource pattern. All of your resource patterns are defined in
@@ -14,11 +18,10 @@ import Control.Applicative
 getRootR :: Handler RepHtml
 getRootR = do
     tws <- runDB $ do
-      dics <- selectList [] [TweetCreatedAtDesc] 1000 1
-      take 20 . filter (not . null . snd) <$> mapM (favWithUsers.snd) dics
+      let tweets = select [] [TweetCreatedAtDesc] 0 0
+      run_ (tweets $$ E.mapM (favWithUsers.snd) =$ E.filter (not . null . snd) =$ isolate 20 =$ consume)
     tweets <- mapM renderTweet tws
     defaultLayout $ do
         h2id <- lift newIdent
         setTitle "konnfav homepage"
         addWidget $(widgetFile "homepage")
-
