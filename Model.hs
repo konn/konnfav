@@ -55,6 +55,10 @@ Favouring
     tweet Word64 Eq
     createdAt TwitterTime Lt Gt Ge Le Desc default=CURRENT_TIME
     UniqueFavouring from tweet
+Following
+    from Word64 Eq
+    to   Word64 Eq
+    UniqueFollowing from to
 |]
 
 newtype TwitterTime = TwitterTime { fromTwitterTime :: UTCTime }

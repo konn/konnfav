@@ -192,3 +192,10 @@ getSearchR :: Handler ()
 getSearchR = do
   scrName <- runFormGet' $ stringInput "screen_name"
   redirect RedirectTemporary $ FavedR scrName
+
+isProtectedTweet :: (PersistBackend m, Functor m) => Tweet -> m Bool
+isProtectedTweet tw = do
+  musr <- liftM (userProtected . snd) <$> getBy (UserScreenName $ tweetUser tw)
+  case musr of
+    Nothing -> return False
+    Just pr -> return pr

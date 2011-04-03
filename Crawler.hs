@@ -28,6 +28,7 @@ import Control.Concurrent
 import System.Random
 import Data.Word
 import Settings
+import Data.Maybe
 
 resultToMaybe :: Data.Aeson.Result a -> Maybe a
 resultToMaybe (Success a) = Just a
@@ -58,14 +59,22 @@ registerIter = do
 procEvent ev = do
   either (const $ return ()) (void.insertBy) (_source ev)
   either (const $ return ()) (void.insertBy) (_target ev)
-  either (const $ return ()) (void.insertBy) (_targetObject ev)
+  either (const $ return ()) (void.insertBy) (fromMaybe (Left 0) $ _targetObject ev)
   case event ev of
     "unfavorite" -> do
       liftIO $ print ev
-      deleteBy $ UniqueFavouring (eventSource ev) (eventTargetObject ev)
+      case eventTargetObject ev of
+        Nothing  -> return ()
+        Just tid -> deleteBy $ UniqueFavouring (eventSource ev) tid
+    "follow"     -> do
+      insertBy $ Following (eventSource ev) (eventTarget ev)
+      return ()
     "delete"     -> do
-      deleteBy $ UniqueTweet (eventTargetObject ev)
-      mapM_ (delete . fst) =<< selectList [FavouringTweetEq (eventTargetObject ev)] [] 0 0
+      case eventTargetObject ev of
+        Nothing  -> return ()
+        Just tid -> do
+          deleteBy $ UniqueTweet tid
+          mapM_ (delete . fst) =<< selectList [FavouringTweetEq tid] [] 0 0
     _            -> return ()
 
 enumLine :: Monad m => Enumeratee ByteString L8.ByteString m b
@@ -98,18 +107,19 @@ data Event = Event { event     :: String
                    , createdAt :: Maybe TwitterTime
                    , _source :: Either Word64 User
                    , _target :: Either Word64 User
-                   , _targetObject :: Either Word64 Tweet
+                   , _targetObject :: Maybe (Either Word64 Tweet)
                    } deriving (Show, Eq)
 
-eventSource, eventTarget, eventTargetObject :: Event -> Word64
+eventSource, eventTarget :: Event -> Word64
 eventSource = either id userUserId . _source
 eventTarget = either id userUserId . _target
-eventTargetObject = either id tweetStatusId . _targetObject
+eventTargetObject :: Event -> Maybe Word64
+eventTargetObject = liftM (either id tweetStatusId) . _targetObject
 
 instance FromJSON Event where
   parseJSON (Object v) = Event <$> v .: "event"  <*> v .: "created_at"
                                <*> v .: "source"
-                               <*> v .: "target" <*> v .: "target_object"
+                               <*> v .: "target" <*> v .:? "target_object"
                       <|> (v .: "delete" >>= (.: "status") >>= \d -> (Event "delete" Nothing
                                                                       <$> d .: "user_id"
                                                                       <*> d .: "user_id" <*> d .: "id"))
