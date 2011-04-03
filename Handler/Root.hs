@@ -6,7 +6,7 @@ import Utils
 import Control.Applicative
 import Data.Enumerator hiding (mapM, consume)
 import qualified Data.Enumerator as E
-import Data.Enumerator.List
+import Data.Enumerator.List hiding (mapM)
 
 -- This is a handler function for the GET request method on the RootR
 -- resource pattern. All of your resource patterns are defined in
