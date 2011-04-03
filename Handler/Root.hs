@@ -20,7 +20,7 @@ getRootR :: Handler RepHtml
 getRootR = do
     tws <- runDB $ do
       let tweets = select [] [TweetCreatedAtDesc] 0 0
-      run_ (tweets $$ E.mapM (favWithUsers.snd) =$ EL.filter (not . null . snd) =$ isolate 20 =$ consume)
+      run_ (tweets $$ EL.mapM (favWithUsers.snd) =$ EL.filter (not . null . snd) =$ isolate 20 =$ consume)
     tweets <- mapM renderTweet tws
     defaultLayout $ do
         h2id <- lift newIdent
