@@ -14,7 +14,7 @@ import Control.Applicative
 getRootR :: Handler RepHtml
 getRootR = do
     tws <- runDB $ do
-      dics <- selectList [] [TweetCreatedAtDesc] 1000 1 0
+      dics <- selectList [] [TweetCreatedAtDesc] 1000 1
       take 20 . filter (not . null . snd) <$> mapM (favWithUsers.snd) dics
     tweets <- mapM renderTweet tws
     defaultLayout $ do
