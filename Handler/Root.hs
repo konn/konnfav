@@ -4,7 +4,7 @@ module Handler.Root where
 import KonnFav
 import Utils
 import Control.Applicative
-import Data.Enumerator hiding (mapM, consume)
+import Data.Enumerator (run_, ($$))
 import qualified Data.Enumerator as E
 import Data.Enumerator.List hiding (mapM)
 import qualified Data.Enumerator.List as EL
@@ -22,7 +22,7 @@ getRootR = do
     tws <- runDB $ do
       let tweets = select [] [TweetCreatedAtDesc] 0 0
       run_ $ tweets $$ EL.mapM (favWithUsers.snd) =$ EL.filter (not . null . snd) =$
-               EL.filterM (isProtectedTweet.fst) =$ isolate 20 =$ consume
+               EL.filterM (isProtectedTweet.fst) =$ isolate 20 =$ EL.consume
     tweets <- mapM renderTweet tws
     defaultLayout $ do
         h2id <- lift newIdent

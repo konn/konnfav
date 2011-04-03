@@ -1,9 +1,6 @@
-{-# LANGUAGE CPP #-}
 module Utils ((=$)) where
-import Data.Enumerator
+import qualified Data.Enumerator as E
 
-#ifdef OLD_ENUMERATOR
-(=$) :: Monad m => Enumeratee ao ai m b -> Iteratee ai m b -> Iteratee ao m b
-(=$) = (joinI .) . ($$)
+(=$) :: Monad m => E.Enumeratee ao ai m b -> E.Iteratee ai m b -> E.Iteratee ao m b
+(=$) = (E.joinI .) . (E.$$)
 infixr 0 =$
-#endif
