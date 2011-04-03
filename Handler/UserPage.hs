@@ -32,7 +32,7 @@ getFavouringsR :: String -> Handler RepHtml
 getFavouringsR  scrName = do
     (user, tws) <- runDB $ do
       (_, user) <- getBy404 (UserScreenName scrName)
-      favs <- map snd <$> selectList [FavouringFromEq (userUserId user)] [] 0 0
+      favs <- map snd <$> selectList [FavouringFromEq (userUserId user)] [FavouringCreatedAtDesc] 0 0
       tws <- mapM (favWithUsers.snd) =<< mapM (getBy404 . UniqueTweet .favouringTweet) favs
       return (user, tws)
     tweets <- mapM renderTweet tws
